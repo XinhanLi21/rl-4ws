@@ -77,8 +77,24 @@ def evaluate_all(checkpoints_dir, dll, path_mat):
 
 # =========================== MAIN =============================
 if __name__ == "__main__":
-    CHECKPOINT_DIR = "checkpoints/ddpg_70"   # ★ DDPG 模型目录
-    DLL            = r"D:\chrome-download\5\5.4\vehiclemodel_public_0326_win64.dll"
-    PATH_MAT       = "mat/lanechange_double_hold20m_40_40_shift20.mat"
+    import argparse
 
-    evaluate_all(CHECKPOINT_DIR, DLL, PATH_MAT)
+    parser = argparse.ArgumentParser(description="Batch evaluate DDPG checkpoints")
+    parser.add_argument(
+        "--dll",
+        default="vehiclemodel_public_0326_win64.dll",
+        help="Path to vehicle model DLL",
+    )
+    parser.add_argument(
+        "--checkpoint-dir",
+        default="checkpoints/ddpg_70",
+        help="Directory containing DDPG checkpoints",
+    )
+    parser.add_argument(
+        "--path-mat",
+        default="mat/lanechange_double_hold20m_40_40_shift20.mat",
+        help="MAT file containing reference path",
+    )
+    args = parser.parse_args()
+
+    evaluate_all(args.checkpoint_dir, args.dll, args.path_mat)
