@@ -192,10 +192,29 @@ def evaluate(checkpoint, dll, path_mat, out_dir="eval/ddpg_70",vx_kmh=60/3.6, Ts
 
 
 if __name__ == "__main__":
-    #CHECKPOINT = r"checkpoints\checkpoints_ddpg\ddpg_step_3056000_steps.zip"  # ← 修改为你的模型路径
-    CHECKPOINT = r"checkpoints\ddpg_70\ddpg_step_2516000_steps.zip"
-    DLL        = r"D:\chrome-download\5\5.4\vehiclemodel_public_0326_win64.dll"
-    PATH_MAT   = "mat/lanechange_double_hold20m_40_40_shift20.mat"
-    OUT_DIR    = "eval/ddpg_70"
+    import argparse
 
-    evaluate(CHECKPOINT, DLL, PATH_MAT, OUT_DIR)
+    parser = argparse.ArgumentParser(description="Evaluate DDPG model")
+    parser.add_argument(
+        "--dll",
+        default="vehiclemodel_public_0326_win64.dll",
+        help="Path to vehicle model DLL",
+    )
+    parser.add_argument(
+        "--checkpoint",
+        default=r"checkpoints/ddpg_70/ddpg_step_2516000_steps.zip",
+        help="Path to DDPG checkpoint",
+    )
+    parser.add_argument(
+        "--path-mat",
+        default="mat/lanechange_double_hold20m_40_40_shift20.mat",
+        help="MAT file containing reference path",
+    )
+    parser.add_argument(
+        "--out-dir",
+        default="eval/ddpg_70",
+        help="Output directory for evaluation results",
+    )
+    args = parser.parse_args()
+
+    evaluate(args.checkpoint, args.dll, args.path_mat, args.out_dir)

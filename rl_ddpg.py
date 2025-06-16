@@ -5,7 +5,6 @@ XY 子图为正方形；Y 轴固定 [-1, 6] 且 0.25 m 主刻度。
 """
 # -------------------------------------------------------------
 import multiprocessing as mp
-mp.set_start_method("spawn", force=True)
 
 import os, math, pathlib, numpy as np, matplotlib
 matplotlib.use("Agg")
@@ -227,10 +226,22 @@ def make_env(rank, path, dll, seed=0):
 
 # =========================== MAIN =============================
 if __name__ == "__main__":
-    DLL  = r"D:\chrome-download\5\5.4\vehiclemodel_public_0326_win64.dll"
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Train DDPG controller")
+    parser.add_argument(
+        "--dll",
+        default="vehiclemodel_public_0326_win64.dll",
+        help="Path to vehicle model DLL",
+    )
+    args = parser.parse_args()
+
+    mp.set_start_method("spawn", force=True)
+
+    DLL = args.dll
     PATH = np.asarray(
         loadmat("mat/lanechange_double_hold20m_40_40_shift20.mat")["path_ref"],
-        float
+        float,
     )
 
     n_envs = 4

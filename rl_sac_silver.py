@@ -5,7 +5,6 @@ rl_td3_fast_spawn.py — TD3 训练
 • TensorBoard 记录 Q1/Q2、Loss
 """
 import multiprocessing as mp
-mp.set_start_method("spawn", force=True)
 
 import os, math, pathlib, numpy as np, matplotlib
 matplotlib.use("Agg")
@@ -157,9 +156,24 @@ def make_env(rank, path, dll, seed=0):
 
 # =========================== MAIN =============================
 if __name__ == "__main__":
-    DLL  = r"D:\chrome-download\5\5.4\vehiclemodel_public_0326_win64.dll"
-    PATH = np.asarray(loadmat("mat/smooth_closed_track_path_corrected.mat")["path_ref"], float)
-    n_envs = 4; set_random_seed(42)
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Train TD3 controller")
+    parser.add_argument(
+        "--dll",
+        default="vehiclemodel_public_0326_win64.dll",
+        help="Path to vehicle model DLL",
+    )
+    args = parser.parse_args()
+
+    mp.set_start_method("spawn", force=True)
+
+    DLL = args.dll
+    PATH = np.asarray(
+        loadmat("mat/smooth_closed_track_path_corrected.mat")["path_ref"], float
+    )
+    n_envs = 4
+    set_random_seed(42)
 
     env = SubprocVecEnv([make_env(i, PATH, DLL, 42) for i in range(n_envs)],
                         start_method="spawn")
