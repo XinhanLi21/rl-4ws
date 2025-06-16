@@ -1,0 +1,8 @@
+numpy
+matplotlib
+scipy
+sympy
+torch
+gymnasium
+cvxopt
+stable-baselines3
